@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Anything - Marketplace MVP</title>
+  <style>
+
+/* styles.css - Modern responsive styles for Order Anything marketplace */
+:root{
+  --bg: #0b0b0b;
+  --card: #0f0f0f;
+  --accent: #d4af37; /* gold */
+  --muted: #bfbfbf;
+  --glass: rgba(255,255,255,0.03);
+  --radius: 12px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#050505,#0b0b0b);color:#eee}
+a{color:var(--accent);text-decoration:none}
+header{
+  display:flex;align-items:center;justify-content:space-between;padding:18px 28px;
+  backdrop-filter: blur(6px);
+  position:sticky;top:0;z-index:60;background:linear-gradient(180deg, rgba(10,10,10,0.6), rgba(10,10,10,0.25));
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+h1{margin:0;font-weight:700;letter-spacing:1px;color:var(--accent)}
+nav a{margin-left:18px;font-weight:600;color:var(--muted)}
+main{max-width:1100px;margin:28px auto;padding:0 18px}
+.hero{
+  background:linear-gradient(90deg, rgba(212,175,55,0.06), rgba(255,255,255,0.01));
+  border-radius:var(--radius);padding:36px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
+  margin-bottom:28px;border:1px solid rgba(255,255,255,0.03);
+}
+.hero h2{margin:0;font-size:clamp(20px, 3.6vw, 36px)}
+.hero p{color:var(--muted);margin:8px 0 0}
+.cta{display:flex;gap:12px}
+.btn{
+  display:inline-block;padding:10px 16px;border-radius:10px;background:var(--accent);color:#0b0b0b;font-weight:700;
+  box-shadow:0 6px 18px rgba(212,175,55,0.12);border:none;cursor:pointer
+}
+.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 14px;border-radius:10px}
+
+section{margin-bottom:26px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);
+  box-shadow: 0 6px 20px rgba(2,2,2,0.6);
+}
+.card h3{margin:0 0 6px}
+.price{font-weight:800;color:var(--accent);margin-bottom:8px}
+.card p{color:var(--muted);margin:0 0 10px}
+.card .btn{width:100%}
+
+/* Contact & seller button */
+#contact a.btn{display:inline-block;margin-top:8px}
+
+/* Responsive */
+@media (max-width:800px){
+  .grid{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr; text-align:left}
+}
+
+/* Footer */
+footer{padding:18px;text-align:center;color:var(--muted);font-size:14px}
+
+/* Modal styles */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:120;
+}
+.modal{
+  background:linear-gradient(180deg,#0b0b0b,#0f0f0f);padding:18px;border-radius:12px;width:420px;max-width:92%;
+  border:1px solid rgba(255,255,255,0.04);
+}
+.modal h4{margin:0 0 8px}
+.form-row{display:flex;gap:10px;margin-bottom:10px}
+.form-row .field{flex:1}
+.input, .select, .textarea{
+  width:100%;padding:10px;border-radius:8px;background:var(--glass);border:1px solid rgba(255,255,255,0.04);color:#eee;
+}
+.label{font-size:13px;color:var(--muted);margin-bottom:6px;display:block}
+
+/* small helpers */
+.kv{font-size:13px;color:var(--muted)}
+`
+</style>
+</head>
+<body>
+  <header>
+    <h1>Order Anything</h1>
+    <nav>
+      <a href="#products">Products</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Get Anything You Need</h2>
+      <p>Products and services in one place. Order fast. Get it delivered.</p>
+      <div class="cta">
+        <a href="#products" class="btn">Browse Products</a>
+        <a href="#services" class="btn">Find Services</a>
+      </div>
+    <p class="kv">You can also download order details as a CSV before sending: use the order modal and click "Download CSV".</p>
+    </section>
+
+    <section id="products">
+      <h2>Products</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiB2aWV3Qm94PSIwIDAgODAwIDYwMCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzBiMGIwYiIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEyMCw4MCkiPgogICAgPHJlY3QgeD0iMCIgeT0iMTYwIiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjI0MCIgcng9IjIwIiBmaWxsPSIjMWExYTFhIiBzdHJva2U9IiNkNGFmMzciIHN0cm9rZS13aWR0aD0iNiIvPgogICAgPGVsbGlwc2UgY3g9IjI4MCIgY3k9IjE2MCIgcng9IjIyMCIgcnk9IjYwIiBmaWxsPSIjMWExYTFhIiBzdHJva2U9IiNkNGFmMzciIHN0cm9rZS13aWR0aD0iNiIvPgogICAgPHRleHQgeD0iMjgwIiB5PSIzNjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0MiIgZmlsbD0iI2Q0YWYzNyI+RnJlc2ggQ2FrZTwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" alt="Fresh Cake" style="width:100%;border-radius:8px;margin-bottom:8px"/>
+          <h3>Fresh Cake</h3>
+          <p>₦8,000</p>
+          <a href="https://wa.me/2349037934307?text=I'm%20interested%20in%20Fresh%20Cake" class="btn">Order on WhatsApp</a>
+        </div>
+        <div class="card">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiB2aWV3Qm94PSIwIDAgODAwIDYwMCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzBiMGIwYiIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCw2MCkiPgogICAgPHJlY3QgeD0iMTQwIiB5PSI2MCIgd2lkdGg9IjM0MCIgaGVpZ2h0PSIzMjAiIHJ4PSI0MCIgZmlsbD0iIzExMSIgc3Ryb2tlPSIjZDRhZjM3IiBzdHJva2Utd2lkdGg9IjYiLz4KICAgIDxwYXRoIGQ9Ik0xNDAgMTQwIHE1MCAtNjAgMTIwIC0yMCBxNzAgLTQwIDEyMCAyMCBxMzAgNDAgLTYwIDQwIHEtMTIwIDAgLTEyMCAwIHoiIGZpbGw9IiMwYjBiMGIiLz4KICAgIDx0ZXh0IHg9IjMxMCIgeT0iNDMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMzYiIGZpbGw9IiNkNGFmMzciPkNsYXNzaWMgVC1zaGlydDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" alt="Classic T-shirt" style="width:100%;border-radius:8px;margin-bottom:8px"/>
+          <h3>Classic T-shirt</h3>
+          <p>₦5,000</p>
+          <a href="https://wa.me/2349037934307?text=I'm%20interested%20in%20T-shirt" class="btn">Order on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <h2>Services</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiB2aWV3Qm94PSIwIDAgODAwIDYwMCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzBiMGIwYiIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDgwLDYwKSI+CiAgICA8Y2lyY2xlIGN4PSIzMDAiIGN5PSIyMDAiIHI9IjEyMCIgZmlsbD0iIzExMSIgc3Ryb2tlPSIjZDRhZjM3IiBzdHJva2Utd2lkdGg9IjYiLz4KICAgIDxyZWN0IHg9IjIyMCIgeT0iMzMwIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjgwIiByeD0iMjAiIGZpbGw9IiMxMTEiIHN0cm9rZT0iI2Q0YWYzNyIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgICA8dGV4dCB4PSIzMDAiIHk9IjQ2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSIjZDRhZjM3Ij5QZXJzb25hbCBUcmFpbmVyPC90ZXh0PgogIDwvZz4KPC9zdmc+" alt="Personal Trainer" style="width:100%;border-radius:8px;margin-bottom:8px"/>
+          <h3>Personal Trainer</h3>
+          <p>₦10,000 / session</p>
+          <a href="https://wa.me/2349037934307?text=I'm%20interested%20in%20a%20Personal%20Trainer" class="btn">Book on WhatsApp</a>
+        </div>
+        <div class="card">
+          <h3>Home Baker</h3>
+          <p>Custom cakes & pastries</p>
+          <a href="https://wa.me/2349037934307?text=I'm%20interested%20in%20Home%20Baker%20services" class="btn">Book on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <p>WhatsApp: <a href="https://wa.me/2349037934307">+2349037934307</a></p>
+      <p>Email: <a href="mailto:Walterjohnny499@gmail.com">Walterjohnny499@gmail.com</a></p>
+      <p>Instagram: <a href="https://instagram.com/yourhandle">@sylvester_1479</a></p>
+
+      <h3>Become a Seller</h3>
+      <p><a href="https://forms.gle/your-google-form<!-- replace with your seller application form link -->" target="_blank" class="btn">Apply Here</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Order Anything Marketplace</p>
+  </footer>
+
+  <script>
+
+// script.js - basic interactivity for Order Anything
+document.addEventListener('DOMContentLoaded', function(){
+  // set year
+  const yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Create modal HTML and append to body
+  const modalHtml = `
+  <div class="modal-backdrop" id="orderModalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" id="orderModal">
+      <h4 id="modalTitle">Place an Order</h4>
+      <p class="kv" id="modalSubtitle">Quick order — we'll open WhatsApp with your details.</p>
+      <div style="margin-top:10px">
+        <label class="label">Your name<input id="custName" class="input" placeholder="e.g. Ada"/></label>
+        <label class="label">Phone number (with country code)<input id="custPhone" class="input" placeholder="+234..." /></label>
+        <label class="label">Item / Service<input id="custItem" class="input" /></label>
+        <div class="form-row">
+          <div class="field"><label class="label">Quantity<input id="custQty" class="input" type="number" min="1" value="1"/></label></div>
+          <div class="field"><label class="label">Preferred date<input id="custDate" class="input" type="date"/></label></div>
+        </div>
+        <label class="label">Message (optional)<textarea id="custMsg" rows="3" class="textarea" placeholder="Any notes..."></textarea></label>
+        <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end">
+          <button class="secondary" id="cancelOrder">Cancel</button>
+          <button class="btn" id="confirmOrder">Open WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  const backdrop = document.getElementById('orderModalBackdrop');
+  const custName = document.getElementById('custName');
+  const custPhone = document.getElementById('custPhone');
+  const custItem = document.getElementById('custItem');
+  const custQty = document.getElementById('custQty');
+  const custDate = document.getElementById('custDate');
+  const custMsg = document.getElementById('custMsg');
+  const confirmBtn = document.getElementById('confirmOrder');
+  const cancelBtn = document.getElementById('cancelOrder');
+  const modalTitle = document.getElementById('modalTitle');
+
+  // When any .btn with data-order opens modal
+  document.querySelectorAll('a[data-order]').forEach(el=>{
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      const item = el.getAttribute('data-item') || el.textContent.trim();
+      const price = el.getAttribute('data-price') || '';
+      modalTitle.textContent = 'Order — ' + item + (price ? (' · ' + price) : '');
+      custItem.value = item;
+      custQty.value = 1;
+      custMsg.value = '';
+      backdrop.style.display = 'flex';
+      // focus name shortly
+      setTimeout(()=>custName.focus(),150);
+    });
+  });
+
+  cancelBtn.addEventListener('click', function(){ backdrop.style.display='none'; });
+  backdrop.addEventListener('click', function(e){
+    if(e.target === backdrop) backdrop.style.display='none';
+  });
+
+  confirmBtn.addEventListener('click', function(){
+    const name = (custName.value || '').trim();
+    const phone = (custPhone.value || '').trim();
+    const item = (custItem.value || '').trim();
+    const qty = (custQty.value || '1').trim();
+    const date = (custDate.value || '').trim();
+    const msg = (custMsg.value || '').trim();
+
+    if(!phone){
+      alert('Please provide your phone number (with country code).');
+      custPhone.focus();
+      return;
+    }
+    const sellerNumber = '2349037934307'; // replace with your WhatsApp number (no + or dashes)
+    // Build message
+    let text = `Order request from ${name || 'Customer'}%0A`;
+    text += `Item: ${encodeURIComponent(item)}%0A`;
+    text += `Quantity: ${encodeURIComponent(qty)}%0A`;
+    if(date) text += `Preferred date: ${encodeURIComponent(date)}%0A`;
+    if(msg) text += `Notes: ${encodeURIComponent(msg)}%0A`;
+    text += `Contact: ${encodeURIComponent(phone)}`;
+
+    // open WhatsApp (web or app)
+    const waUrl = `https://wa.me/${sellerNumber}?text=${text}`;
+    window.open(waUrl, '_blank');
+    backdrop.style.display='none';
+  });
+
+  // enhance existing product/service links: convert plain whatsapp links into data-order friendly links
+  document.querySelectorAll('section#products a[href*="wa.me"], section#services a[href*="wa.me"]').forEach(a=>{
+    const card = a.closest('.card');
+    if(!card) return;
+    const titleEl = card.querySelector('h3');
+    const priceEl = card.querySelector('p');
+    const item = titleEl ? titleEl.textContent.trim() : 'Item';
+    const price = priceEl ? priceEl.textContent.trim() : '';
+    a.setAttribute('data-order','true');
+    a.setAttribute('data-item', item);
+    a.setAttribute('data-price', price);
+    // prevent default href behavior to show modal first
+    a.addEventListener('click', function(e){ e.preventDefault(); a.click(); });
+  });
+
+});
+
+
+  // CSV download helper
+  function downloadOrderAsCSV(orderObj){
+    const headers = ['name','phone','item','quantity','date','notes'];
+    const rows = [headers.join(',')];
+    const values = [
+      orderObj.name || '',
+      orderObj.phone || '',
+      orderObj.item || '',
+      orderObj.quantity || '',
+      orderObj.date || '',
+      orderObj.notes || ''
+    ];
+    // Escape quotes
+    const esc = v => ('"'+String(v).replace(/"/g,'""')+'"');
+    rows.push(values.map(esc).join(','));
+    const blob = new Blob([rows.join('\n')], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (orderObj.item || 'order') + '-order.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // Add a Download CSV button to modal and a "Send email" option
+  (function addCsvButton(){
+    const modal = document.getElementById('orderModal');
+    if(!modal) return;
+    // create container row
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.justifyContent = 'space-between';
+    row.style.marginTop = '10px';
+    // CSV button
+    const csvBtn = document.createElement('button');
+    csvBtn.className = 'secondary';
+    csvBtn.type = 'button';
+    csvBtn.textContent = 'Download CSV';
+    csvBtn.addEventListener('click', function(){
+      const orderObj = {
+        name: custName.value.trim(),
+        phone: custPhone.value.trim(),
+        item: custItem.value.trim(),
+        quantity: custQty.value.trim(),
+        date: custDate.value.trim(),
+        notes: custMsg.value.trim()
+      };
+      downloadOrderAsCSV(orderObj);
+    });
+    // Email button
+    const emailBtn = document.createElement('button');
+    emailBtn.className = 'secondary';
+    emailBtn.type = 'button';
+    emailBtn.textContent = 'Prepare Email';
+    emailBtn.addEventListener('click', function(){
+      const bodyLines = [
+        'Order request from ' + (custName.value.trim() || 'Customer'),
+        'Item: ' + custItem.value.trim(),
+        'Quantity: ' + custQty.value.trim(),
+        custDate.value ? ('Preferred date: ' + custDate.value) : '',
+        custMsg.value ? ('Notes: ' + custMsg.value) : '',
+        'Contact: ' + custPhone.value.trim()
+      ].filter(Boolean).join('\n');
+      const subject = 'Order request: ' + (custItem.value.trim() || 'Item');
+      const mailto = 'mailto:Walterjohnny499@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyLines);
+      window.location.href = mailto;
+    });
+
+    // Place them above existing action buttons
+    const parent = modal.querySelector('div');
+    if(parent){
+      parent.insertBefore(row, parent.firstChild.nextSibling);
+      row.appendChild(csvBtn);
+      row.appendChild(emailBtn);
+    }
+  })();
+
+</script>
+</body>
+</html>
